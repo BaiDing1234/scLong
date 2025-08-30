@@ -4,6 +4,10 @@
 
 # Install
 
+conda env create -f sclong.yml
+
+OR install these one by one:
+
 Python v3.7.16 (https://www.python.org/), 
 
 NumPy v1.21.5 (https://github.com/numpy/numpy), 
