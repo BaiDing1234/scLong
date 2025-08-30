@@ -4,7 +4,9 @@
 
 # Install
 
+```
 conda env create -f sclong.yml
+```
 
 OR install these one by one:
 
