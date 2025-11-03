@@ -24,7 +24,7 @@ color_dict = {'w/o GO': '#FF99CC',
 
 import pickle
 
-with open('abl_go_dict.pkl', 'rb') as file:
+with open('../pkls/abl_go_dict.pkl', 'rb') as file:
     abl_low_dict = pickle.load(file)
 
 value_dict = abl_low_dict['value_dict']
@@ -65,6 +65,11 @@ for j in range(5):
             errors = np.array(value_dict[metric][model])[[1, 3, 5, 7]]
             label = model
             ax.bar(indices + model_idx * width, values, yerr=errors, label=label, width=width, color= color_dict[model]) #, color=colors[model_idx % len(colors)])
+            samples = np.array(value_dict[metric][model])[8:].reshape((4, 5))
+            for k, pos in enumerate(indices + model_idx * width):
+                y = samples[k]
+                x = pos + np.linspace(-0.25, 0.25, len(y)) * width
+                ax.scatter(x, y, color='black', s=1, zorder=3,marker='.')
         if i == 0:
             ax.set_ylim(0.1,0.26)
             ax.set_title('Predicting transcriptional outcomes of genetic perturbation', fontsize = 7)
@@ -88,6 +93,13 @@ for j in range(5):
             if i < 2:
                 print(i)
                 ax.bar([width * model_idx], values[model_idx], yerr=errors[model_idx], width=width, color = colors[model_idx]) #, color=colors[model_idx % len(colors)])
+                samples = [values[3 + model_idx * 5: 3 + (model_idx+1) * 5]]
+                for k, pos in enumerate([width * model_idx]):
+                    y = samples[k]
+                    if len(y) < 5:
+                        raise ValueError('len(samples) < 5')
+                    x = pos + np.linspace(-0.25, 0.25, len(y)) * width
+                    ax.scatter(x, y, color='black', s=1, zorder=3,marker='.')
             if i == 2:
                 print(i)
                 ax.bar([width * model_idx], values[model_idx], width=width, color = colors[model_idx])
@@ -112,6 +124,6 @@ for j in range(5):
 fig.subplots_adjust(hspace=0, bottom=0.25)
 
 
-fig.savefig(f'../figs/all_abl_go.svg', format='svg')
+fig.savefig(f'figs/all_abl_go.svg', format='svg')
 fig = None
 plt.close()

@@ -22,7 +22,7 @@ color_dict = {'GENIE3': '#FF99CC',
 
 
 
-with open('grn_inference_dict.pkl', 'rb') as file:
+with open('../pkls/grn_inference_dict.pkl', 'rb') as file:
     grn_inference_dict = pickle.load(file)
 data1 = np.array(grn_inference_dict['data1'])
 data2 = np.array(grn_inference_dict['data2'])
@@ -44,6 +44,14 @@ for i in range(2):
     errors = [error2, error1][i]
     for model_idx, model in enumerate(models):
         ax.barh([-(indices * width)[model_idx]] , width=values[model_idx], xerr=errors[model_idx], height=width * 1.2, color = colors[model_idx]) #, color=colors[model_idx % len(colors)])
+        bar_positions = [-(indices * width)[model_idx]]
+        samples = [values[7 + model_idx * 5 : 7 + (model_idx+1) * 5],]
+        for k, pos in enumerate(bar_positions):
+            y = samples[k]
+            if len(y) < 5:
+                raise ValueError('len(samples) < 5')
+            x = pos + np.linspace(-0.25, 0.25, len(y)) * width* 1.2
+            ax.scatter(y, x, color='black', s=1, zorder=3,marker='.')
     if i == 0:
         ax.set_xlim((1, 1.4))
         ax.set_xticks(ticks = [1.0, 1.1, 1.2, 1.3, 1.4])

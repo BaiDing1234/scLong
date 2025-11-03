@@ -26,7 +26,7 @@ color_dict = {'GEARS': '#FFCC99',
               'scLong': '#CC99FF'}
 
 
-with open('norman_mse_pod_pearson.pkl', 'rb') as file:
+with open('pkls/norman_mse_pod_pearson.pkl', 'rb') as file:
     value_dict = pickle.load(file)
 
 z = np.random.normal()
@@ -45,8 +45,15 @@ for i, metric in enumerate(metric_to_plot):
     for model_idx, model in enumerate(models):
         values = np.array(value_dict[metric][model])[[0, 2, 4, 6]]
         errors = np.array(value_dict[metric][model])[[1, 3, 5, 7]]
+        samples = np.array(value_dict[metric][model])[8:].reshape((4, 5))
         label = model
-        ax.bar(indices + model_idx * width, values, yerr=errors, label=label, width=width, color= color_dict[model]) #, color=colors[model_idx % len(colors)])
+        # draw bars
+        bar_positions = indices + model_idx * width
+        ax.bar(bar_positions, values, yerr=errors, label=label, width=width, color=color_dict[model])
+        for k, pos in enumerate(bar_positions):
+            y = samples[k]
+            x = pos + np.linspace(-0.25, 0.25, len(y)) * width
+            ax.scatter(x, y, color='black', s=1, zorder=3,marker='.')
     if i == 0:
         ax.set_ylim(0.1,0.32)
     if i == 1:

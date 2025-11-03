@@ -11,7 +11,7 @@ plt.rcParams['font.size'] = 6
 plt.rcParams['svg.fonttype'] = 'none' 
 plt.rcParams['lines.linewidth'] = 0.5
 
-with open('drug_and_drug_comb_dict.pkl', 'rb') as file:
+with open('../pkls/drug_and_drug_comb_dict.pkl', 'rb') as file:
     drug_and_drug_comb_dict = pickle.load(file)
 
 curve_dir = '/home/ding.bai/ding-scfmv1-downstream/update/results_process/other_figs/drug_comb_roc'
@@ -53,6 +53,15 @@ for ax_i, ax in enumerate(axes):
         for model_idx, model in enumerate(models):
             #ax.bar([(indices * width)[model_idx]], width=values[model_idx], xerr=errors[model_idx], width=width, color = colors[model_idx]) #, color=colors[model_idx % len(colors)])
             ax.barh([-(indices * width)[model_idx]] , width=values[model_idx], xerr=errors[model_idx], height=width * 1.2 , color = colors[model_idx])
+
+            bar_positions = [-(indices * width)[model_idx]]
+            samples = [values[6 + model_idx * 5 : 6 + (model_idx+1) * 5],]
+            for i, pos in enumerate(bar_positions):
+                y = samples[i]
+                if len(y) < 5:
+                    raise ValueError('len(samples) < 5')
+                x = pos + np.linspace(-0.25, 0.25, len(y)) * width* 1.2
+                ax.scatter(y, x, color='black', s=1, zorder=3,marker='.')
         ax.set_xlim((0.82, 0.89))
         ax.set_xlabel(f'Pearson correlation', fontsize = 6)
         ax.set_xticks(ticks=0.02 * np.arange(41, 45))
@@ -61,7 +70,6 @@ for ax_i, ax in enumerate(axes):
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
 
-        #
 
         ax.set_title('Single drug response prediction', fontsize = 9)
         
@@ -88,6 +96,16 @@ for ax_i, ax in enumerate(axes):
         for model_idx, model in enumerate(models):
             #ax.bar([(indices * width)[model_idx]], values[model_idx], yerr = errors[model_idx], width=width, color = colors[model_idx]) 
             ax.barh([-(indices * width)[model_idx]] , width=values[model_idx], xerr=errors[model_idx], height=width * 1.2 , color = colors[model_idx])
+            
+            bar_positions = [-(indices * width)[model_idx]]
+            samples = [values[6 + model_idx * 5 : 6 + (model_idx+1) * 5],]
+            for i, pos in enumerate(bar_positions):
+                y = samples[i]
+                if len(y) < 5:
+                    raise ValueError('len(samples) < 5')
+                x = pos + np.linspace(-0.25, 0.25, len(y)) * width* 1.2
+                ax.scatter(y, x, color='black', s=1, zorder=3,marker='.')
+        
         ax.set_xlim((0.56, 0.66))
         ax.set_xticks(ticks = 0.02 * np.arange(28, 34))
         ax.set_xlabel(f'AUROC', fontsize = 6)
